@@ -43,19 +43,19 @@ const RULES = [
 {id:"SECRET-AWS-01",title:"Possible AWS access key",severity:"critical",category:"secrets",language:["javascript","typescript","jsx","tsx","python","shell","yaml","json","text","env"],needle:"akia",pattern:"\\bAKIA[0-9A-Z]{16}\\b",description:"This resembles an AWS access key ID. Check nearby context, revoke exposed credentials, and rotate affected keys.",confidence:"medium"},
 {id:"SECRET-PRIVATE-KEY-01",title:"Private key material in file",severity:"critical",category:"secrets",language:["javascript","typescript","jsx","tsx","python","shell","yaml","json","text","env"],needle:"-----begin",pattern:"-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----",description:"Private key material appears in a project file. Remove it from the repository and revoke or rotate the key as appropriate.",confidence:"high"},
 {id:"SECRET-PASSWORD-01",title:"Hard-coded password-like assignment",severity:"high",category:"secrets",language:["javascript","typescript","jsx","tsx","python","shell","yaml","json","text","env"],needle:"password",pattern:"\\b(?:password|passwd|pwd)\\s*[:=]\\s*['\"][^'\"]{6,}['\"]",description:"A password-like literal is assigned directly in source. This can flag examples and test fixtures; review the context.",confidence:"medium"},
-{id:"NODE-EXEC-01",title:"Potential shell command execution",severity:"high",category:"command-injection",language:["javascript","typescript","jsx","tsx"],needle:"exec(",pattern:"\\bexec\\s*\\(",description:"Shell execution is dangerous when arguments can contain user-controlled text. Prefer argument-array APIs and validate inputs.",confidence:"low"},
+{id:"NODE-EXEC-01",title:"Potential shell command execution",severity:"high",category:"command-injection",language:["javascript","typescript","jsx","tsx"],needle:"exec",pattern:"\\bexec\\s*\\(",description:"Shell execution is dangerous when arguments can contain user-controlled text. Prefer argument-array APIs and validate inputs.",confidence:"low"},
 {id:"NODE-CHILD-PROCESS-01",title:"Child process invocation",severity:"medium",category:"command-injection",language:["javascript","typescript","jsx","tsx"],needle:"child_process",pattern:"child_process",description:"Review subprocess invocation for shell interpolation, untrusted arguments, and unnecessary privileges.",confidence:"low"},
-{id:"PY-EVAL-01",title:"Python eval usage",severity:"high",category:"code-execution",language:["python"],needle:"eval(",pattern:"\\beval\\s*\\(",description:"Python eval evaluates text as Python code. Avoid untrusted input; consider a constrained parser.",confidence:"high"},
+{id:"PY-EVAL-01",title:"Python eval usage",severity:"high",category:"code-execution",language:["python"],needle:"eval",pattern:"\\beval\\s*\\(",description:"Python eval evaluates text as Python code. Avoid untrusted input; consider a constrained parser.",confidence:"high"},
 {id:"PY-EXEC-01",title:"Python exec usage",severity:"high",category:"code-execution",language:["python"],needle:"exec(",pattern:"\\bexec\\s*\\(",description:"Python exec executes dynamically constructed code. Check whether it can be replaced with explicit logic.",confidence:"medium"},
 {id:"PY-PICKLE-01",title:"Deserialization with pickle",severity:"high",category:"deserialization",language:["python"],needle:"pickle.loads",pattern:"\\bpickle\\.(?:load|loads)\\s*\\(",description:"Unpickling untrusted data can execute code. Never deserialize attacker-controlled pickle data.",confidence:"high"},
-{id:"PY-SHELL-TRUE-01",title:"Subprocess shell=True",severity:"high",category:"command-injection",language:["python"],needle:"shell=true",pattern:"\\bshell\\s*=\\s*True",description:"Shell interpretation can allow command injection when arguments are influenced by external input.",confidence:"medium"},
+{id:"PY-SHELL-TRUE-01",title:"Subprocess shell=True",severity:"high",category:"command-injection",language:["python"],needle:"shell",pattern:"\\bshell\\s*=\\s*True",description:"Shell interpretation can allow command injection when arguments are influenced by external input.",confidence:"medium"},
 {id:"PY-YAML-LOAD-01",title:"Potentially unsafe YAML loading",severity:"medium",category:"deserialization",language:["python"],needle:"yaml.load",pattern:"\\byaml\\.load\\s*\\(",description:"Some YAML loaders can construct arbitrary objects. For untrusted input, use a safe loader.",confidence:"medium"},
-{id:"SQL-CONCAT-01",title:"Potential SQL string construction",severity:"high",category:"sql-injection",language:["javascript","typescript","python","php","java","go","ruby"],needle:"select",pattern:"(?:SELECT|UPDATE|DELETE|INSERT)[^;]{0,160}(?:\\+\\s*[A-Za-z_$]|\\$\\{[^}]+\\}|%s)",description:"Query strings appear to incorporate variables or formatting. Prefer parameterized queries and validate query structure.",confidence:"low"},
+{id:"SQL-CONCAT-01",title:"Potential SQL string construction",severity:"high",category:"sql-injection",language:["javascript","typescript","python","php","java","go","ruby"],needle:"select|update|delete|insert",pattern:"(?:SELECT|UPDATE|DELETE|INSERT)[^;]{0,160}(?:\\+\\s*[A-Za-z_$]|\\$\\{[^}]+\\}|%s)",description:"Query strings appear to incorporate variables or formatting. Prefer parameterized queries and validate query structure.",confidence:"low"},
 {id:"HTML-LINK-NOOPENER",title:"External link missing rel=noopener",severity:"low",category:"html-safety",language:["html"],needle:"target=",pattern:"<a\\b[^>]*\\btarget\\s*=\\s*['\"]_blank['\"][^>]*>",description:"A link opening a new browsing context should use rel=noopener. The supported repair adds noopener noreferrer.",confidence:"high",repair:"noopener"},
 {id:"HTML-IMAGE-ALT-01",title:"Image may be missing alternative text",severity:"low",category:"accessibility",language:["html"],needle:"<img",pattern:"<img\\b(?![^>]*\\balt\\s*=)[^>]*>",description:"Images should have meaningful alt text or an empty alt for decorative images. The correct text depends on context.",confidence:"medium"},
 {id:"HTML-EXT-SCRIPT-01",title:"External script without integrity metadata",severity:"low",category:"supply-chain",language:["html"],needle:"<script",pattern:"<script\\b(?=[^>]*\\bsrc\\s*=\\s*['\"]https?://)[^>]*>",description:"Consider Subresource Integrity for third-party scripts when a stable integrity hash is provided by the supplier.",confidence:"low"},
 {id:"HTML-IFRAME-TITLE-01",title:"Iframe may be missing a title",severity:"low",category:"accessibility",language:["html"],needle:"<iframe",pattern:"<iframe\\b(?![^>]*\\btitle\\s*=)[^>]*>",description:"Give each iframe a title describing its content to assistive technology.",confidence:"medium"},
-{id:"HTML-INLINE-EVENT-01",title:"Inline event handler",severity:"medium",category:"content-security-policy",language:["html"],needle:"onclick=",pattern:"\\bon(?:click|load|error|mouseover)\\s*=\\s*['\"]",description:"Inline event handlers complicate a strict Content Security Policy and are best moved into script code.",confidence:"low"},
+{id:"HTML-INLINE-EVENT-01",title:"Inline event handler",severity:"medium",category:"content-security-policy",language:["html"],needle:"on",pattern:"\\bon(?:click|load|error|mouseover)\\s*=\\s*['\"]",description:"Inline event handlers complicate a strict Content Security Policy and are best moved into script code.",confidence:"low"},
 {id:"CSS-EXPRESSION-01",title:"Legacy CSS expression()",severity:"medium",category:"legacy-code",language:["css"],needle:"expression(",pattern:"\\bexpression\\s*\\(",description:"The legacy CSS expression construct is obsolete and may indicate outdated compatibility code.",confidence:"high"},
 {id:"CORS-WILDCARD-01",title:"Wildcard CORS origin",severity:"medium",category:"cors",language:["javascript","typescript","python","yaml","json","text"],needle:"access-control-allow-origin",pattern:"Access-Control-Allow-Origin\\s*[:=]\\s*['\"]?\\*",description:"A wildcard CORS origin may be intentional for public resources. Do not combine credentialed requests with a wildcard origin.",confidence:"medium"},
 {id:"TLS-VERIFY-OFF-01",title:"TLS certificate verification disabled",severity:"high",category:"transport-security",language:["javascript","typescript","python","go","text"],needle:"rejectunauthorized",pattern:"rejectUnauthorized\\s*:\\s*false",description:"Disabling certificate verification weakens TLS. Restrict exceptions to controlled test environments.",confidence:"high"},
@@ -77,12 +77,15 @@ function safeRulePack(rawRules) {
   if (!Array.isArray(rawRules)) throw new Error("A pattern pack must contain a rules array.");
   if (rawRules.length > LIMITS.customRules) throw new Error("Pattern pack exceeds the 10,000-rule limit.");
   const seen = new Set(state.customRules.map(r => r.id));
+  let totalNeedleChars = state.customRules.reduce((sum, rule) => sum + String(rule.needle || "").length, 0);
   const out = [];
   const validSeverity = new Set(["critical","high","medium","low","info"]);
   for (const raw of rawRules) {
     if (!raw || typeof raw !== "object") continue;
     const id = String(raw.id || "").trim(), match = String(raw.match || "");
     if (!/^[A-Za-z0-9._:-]{3,100}$/.test(id) || seen.has(id) || !match || match.length > 1000) continue;
+    if (totalNeedleChars + match.length > 100000) throw new Error("Pattern pack exceeds the 100,000-character aggregate literal-trigger limit.");
+    totalNeedleChars += match.length;
     const severity = String(raw.severity || "medium").toLowerCase();
     if (!validSeverity.has(severity)) continue;
     let languages = Array.isArray(raw.languages) ? raw.languages : Array.isArray(raw.language) ? raw.language : ["text"];
@@ -106,12 +109,67 @@ function makeFinding(rule, path, language, text, match, start, end) {
   if(rule.category==="secrets") snippet=snippet.replace(/[A-Za-z0-9_\-/.+=]{12,}/g,"[redacted candidate]");
   return { id:rule.id+":"+path+":"+start, ruleId:rule.id, title:rule.title, severity:rule.severity, category:rule.category, path, line:lc.line, column:lc.column, description:rule.description||"Review this deterministic heuristic in context.", confidence:rule.confidence||"medium", status:"open", fixAvailable:rule.repair==="noopener", repairSafety:rule.repair==="noopener"?"safe":"review", language, start, end, matchedText:rule.category==="secrets"?"[redacted candidate]":String(match).slice(0,1000), snippet };
 }
+let mainNeedleIndex = null;
+let mainNeedleIndexCount = -1;
+function buildNeedleIndex(rules) {
+  const nodes = [{ next: Object.create(null), fail: 0, out: [] }];
+  for (const rule of rules) {
+    const needles = String(rule.needle || "").toLowerCase().split("|").filter(Boolean);
+    for (const needle of needles) {
+      let node = 0;
+      for (const ch of needle) {
+        let next = nodes[node].next[ch];
+        if (next === undefined) { next = nodes.length; nodes[node].next[ch] = next; nodes.push({ next: Object.create(null), fail: 0, out: [] }); }
+        node = next;
+      }
+      if (!nodes[node].out.includes(rule)) nodes[node].out.push(rule);
+    }
+  }
+  const queue = [];
+  for (const ch of Object.keys(nodes[0].next)) { const child = nodes[0].next[ch]; nodes[child].fail = 0; queue.push(child); }
+  for (let cursor = 0; cursor < queue.length; cursor++) {
+    const parent = queue[cursor];
+    for (const ch of Object.keys(nodes[parent].next)) {
+      const child = nodes[parent].next[ch];
+      let fallback = nodes[parent].fail;
+      while (fallback && nodes[fallback].next[ch] === undefined) fallback = nodes[fallback].fail;
+      const target = nodes[fallback].next[ch];
+      if (target !== undefined && target !== child) nodes[child].fail = target;
+      nodes[child].out.push(...nodes[nodes[child].fail].out);
+      queue.push(child);
+    }
+  }
+  return nodes;
+}
+function selectIndexedRules(text, nodes) {
+  const found = new Set();
+  if (!nodes) return [];
+  let node = 0;
+  const low = String(text).toLowerCase();
+  for (const ch of low) {
+    while (node && nodes[node].next[ch] === undefined) node = nodes[node].fail;
+    const next = nodes[node].next[ch];
+    if (next !== undefined) node = next;
+    for (const rule of nodes[node].out) found.add(rule);
+  }
+  return [...found];
+}
+function indexedRules(text, customRules) {
+  const all = RULES.concat(customRules || []);
+  if (!mainNeedleIndex || mainNeedleIndexCount !== all.length) {
+    const totalNeedleChars = all.reduce((sum, rule) => sum + String(rule.needle || "").split("|").reduce((n, part) => n + part.length, 0), 0);
+    if (totalNeedleChars > 100000) throw new Error("Pattern index exceeds the 100,000-character literal-trigger budget.");
+    mainNeedleIndex = buildNeedleIndex(all);
+    mainNeedleIndexCount = all.length;
+  }
+  return selectIndexedRules(text, mainNeedleIndex);
+}
+
 function scanSync(file, customRules) {
   const text=file.currentText||"", low=text.toLowerCase(), language=file.language, findings=[]; let checked=0;
   if(language==="json"){try{JSON.parse(text)}catch(error){const m=String(error.message||"Invalid JSON"),pos=Number((m.match(/position\s+(\d+)/i)||[])[1]||0);findings.push(makeFinding({id:"JSON-INVALID-01",title:"Invalid JSON syntax",severity:"high",category:"syntax",description:"JSON parser: "+m.slice(0,180),confidence:"high"} ,file.path,language,text,text.slice(pos,pos+1),Math.min(pos,text.length),Math.min(pos+1,text.length)))}}
-  for(const rule of RULES.concat(customRules||[])){
+  for(const rule of indexedRules(text, customRules||[])){
     if(!allowedLanguage(rule,language))continue;
-    if(rule.needle&&!low.includes(String(rule.needle).toLowerCase()))continue;
     if(rule.always)continue; checked++;
     try{
       if(rule.match){let at=0,n=0;const needle=String(rule.match).toLowerCase();while((at=low.indexOf(needle,at))!==-1&&n<8){findings.push(makeFinding(rule,file.path,language,text,text.slice(at,at+needle.length),at,at+needle.length));n++;at+=Math.max(1,needle.length)}continue}
@@ -132,16 +190,40 @@ function crossFileFindings(files) {
   return out;
 }
 function scannerWorkerCore() {
+  let cachedIndex = null, cachedVersion = -1, cachedRules = [];
+  function buildIndex(rules) {
+    const nodes = [{ next: Object.create(null), fail: 0, out: [] }];
+    for (const rule of rules) for (const needle of String(rule.needle || "").toLowerCase().split("|").filter(Boolean)) {
+      let node = 0;
+      for (const ch of needle) {
+        let next = nodes[node].next[ch];
+        if (next === undefined) { next = nodes.length; nodes[node].next[ch] = next; nodes.push({ next: Object.create(null), fail: 0, out: [] }); }
+        node = next;
+      }
+      if (!nodes[node].out.includes(rule)) nodes[node].out.push(rule);
+    }
+    const queue = [];
+    for (const ch of Object.keys(nodes[0].next)) { const child=nodes[0].next[ch]; nodes[child].fail=0; queue.push(child); }
+    for (let cursor=0; cursor<queue.length; cursor++) { const parent=queue[cursor]; for (const ch of Object.keys(nodes[parent].next)) { const child=nodes[parent].next[ch]; let fallback=nodes[parent].fail; while(fallback&&nodes[fallback].next[ch]===undefined)fallback=nodes[fallback].fail; const target=nodes[fallback].next[ch]; if(target!==undefined&&target!==child)nodes[child].fail=target; nodes[child].out.push(...nodes[nodes[child].fail].out); queue.push(child); } }
+    return nodes;
+  }
+  function select(text) {
+    const found=new Set();if(!cachedIndex)return [];let node=0;
+    for(const ch of String(text).toLowerCase()){while(node&&cachedIndex[node].next[ch]===undefined)node=cachedIndex[node].fail;const next=cachedIndex[node].next[ch];if(next!==undefined)node=next;for(const rule of cachedIndex[node].out)found.add(rule);}
+    return [...found];
+  }
   self.onmessage = function(event) {
     const data=event.data||{}; if(data.type!=="scan")return;
     try {
-      const text=String(data.text||""),low=text.toLowerCase(),language=data.language,all=(data.rules||[]).concat(data.customRules||[]),out=[];let checked=0;
+      const text=String(data.text||""),low=text.toLowerCase(),language=data.language,out=[];let checked=0;
+      if(data.version!==cachedVersion&&Array.isArray(data.rules)&&Array.isArray(data.customRules)){cachedRules=data.rules.concat(data.customRules);const chars=cachedRules.reduce((sum,r)=>sum+String(r.needle||"").split("|").reduce((n,p)=>n+p.length,0),0);if(chars>100000)throw new Error("Pattern index exceeds the aggregate literal-trigger limit.");cachedIndex=buildIndex(cachedRules);cachedVersion=data.version;}
+      const candidates=select(text);
       const starts=[0];for(let i=0;i<text.length;i++)if(text.charCodeAt(i)===10)starts.push(i+1);
       const loc=at=>{let lo=0,hi=starts.length-1;while(lo<=hi){const mid=(lo+hi)>>1;if(starts[mid]<=at)lo=mid+1;else hi=mid-1}const line=Math.max(0,hi);return {line:line+1,column:at-starts[line]+1}};
       const snip=(start,end)=>{const a=text.lastIndexOf("\n",Math.max(0,start-1))+1;let b=text.indexOf("\n",end);if(b<0)b=text.length;let s=text.slice(a,b).trim();if(s.length>260)s=s.slice(0,130)+" … "+s.slice(-100);return s};
       const add=(r,match,start,end)=>{const lc=loc(start);let snippet=snip(start,end);if(r.category==="secrets")snippet=snippet.replace(/[A-Za-z0-9_\-/.+=]{12,}/g,"[redacted candidate]");out.push({id:r.id+":"+data.path+":"+start,ruleId:r.id,title:r.title,severity:r.severity,category:r.category,path:data.path,line:lc.line,column:lc.column,description:r.description||"Review this deterministic heuristic in context.",confidence:r.confidence||"medium",status:"open",fixAvailable:r.repair==="noopener",repairSafety:r.repair==="noopener"?"safe":"review",language,start,end,matchedText:r.category==="secrets"?"[redacted candidate]":String(match).slice(0,1000),snippet})};
       if(language==="json"){try{JSON.parse(text)}catch(err){const msg=String(err.message||"Invalid JSON"),pos=Number((msg.match(/position\s+(\d+)/i)||[])[1]||0);add({id:"JSON-INVALID-01",title:"Invalid JSON syntax",severity:"high",category:"syntax",description:"JSON parser: "+msg.slice(0,180),confidence:"high"},text.slice(pos,pos+1),Math.min(pos,text.length),Math.min(pos+1,text.length))}}
-      for(const r of all){if(!((r.language||[]).includes(language)||(r.language||[]).includes("text")))continue;if(r.needle&&!low.includes(String(r.needle).toLowerCase()))continue;checked++;try{if(r.match){const needle=String(r.match).toLowerCase();let at=0,n=0;while((at=low.indexOf(needle,at))!==-1&&n<8){add(r,text.slice(at,at+needle.length),at,at+needle.length);n++;at+=Math.max(1,needle.length)}continue}const re=new RegExp(r.pattern,r.flags||"gi");let n=0;for(let m;(m=re.exec(text))&&n<8;){if(!(r.id==="HTML-LINK-NOOPENER"&&/\brel\s*=\s*(['"])[^'"]*\bnoopener\b/i.test(m[0]))){add(r,m[0],m.index,m.index+m[0].length);n++}if(!m[0].length)re.lastIndex++}}catch{}}
+      for(const r of candidates){if(!((r.language||[]).includes(language)||(r.language||[]).includes("text")))continue;checked++;try{if(r.match){const needle=String(r.match).toLowerCase();let at=0,n=0;while((at=low.indexOf(needle,at))!==-1&&n<8){add(r,text.slice(at,at+needle.length),at,at+needle.length);n++;at+=Math.max(1,needle.length)}continue}const re=new RegExp(r.pattern,r.flags||"gi");let n=0;for(let m;(m=re.exec(text))&&n<8;){if(!(r.id==="HTML-LINK-NOOPENER"&&/\brel\s*=\s*(['"])[^'"]*\bnoopener\b/i.test(m[0]))){add(r,m[0],m.index,m.index+m[0].length);n++}if(!m[0].length)re.lastIndex++}}catch{}}
       self.postMessage({type:"done",id:data.id,findings:out,checked});
     } catch(error) { self.postMessage({type:"error",id:data.id,error:String(error&&error.message||error)}); }
   };
@@ -150,7 +232,7 @@ function ensureWorker() {
   if(state.worker)return state.worker;
   try{state.workerUrl=URL.createObjectURL(new Blob(["("+scannerWorkerCore.toString()+")()"],{type:"text/javascript"}));state.worker=new Worker(state.workerUrl);return state.worker}catch{return null}
 }
-let workerJob=0;
+let workerJob=0, workerRulesVersion=-1;
 function scanInWorker(file) {
   const worker=ensureWorker();if(!worker)return Promise.resolve(scanSync(file,state.customRules));
   const id="orf-"+(++workerJob);
@@ -159,7 +241,10 @@ function scanInWorker(file) {
     const timer=setTimeout(()=>finish(scanSync(file,state.customRules)),12000);
     const listener=event=>{if(event.data?.id!==id)return;if(event.data.type==="done")finish({findings:event.data.findings,checked:event.data.checked});else finish(scanSync(file,state.customRules))};
     worker.addEventListener("message",listener);
-    worker.postMessage({type:"scan",id,path:file.path,text:file.currentText,language:file.language,rules:RULES,customRules:state.customRules});
+    const version=RULES.length+state.customRules.length;
+    const message={type:"scan",id,path:file.path,text:file.currentText,language:file.language,version};
+    if(workerRulesVersion!==version){message.rules=RULES;message.customRules=state.customRules;workerRulesVersion=version;}
+    worker.postMessage(message);
   });
 }
 function severityCounts() {
