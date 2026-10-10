@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Orion Repo Fixer — deterministic repository pattern intelligence and auto-repair workspace.">
+  <title>Orion Repo Fixer</title>
+  <link rel="stylesheet" href="assets/css/app.css">
+  <script type="module" src="assets/js/ui.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#workspace" aria-label="Orion Repo Fixer workspace">
+        <img src="assets/img/orion-icon.webp" alt="" class="brand-mark">
+        <span class="brand-copy"><strong>ORION</strong><small>REPO FIXER</small></span>
+      </a>
+      <div class="topbar-context"><span class="status-dot" aria-hidden="true"></span><span id="project-status">WAITING FOR ENGINE</span><span class="context-separator">/</span><span id="project-name">NO PROJECT LOADED</span></div>
+      <div class="topbar-actions"><button class="icon-button" type="button" title="Keyboard shortcuts" aria-label="Keyboard shortcuts">?</button><button class="avatar" type="button" aria-label="Workspace menu">OF</button></div>
+    </header>
+    <div class="app-body">
+      <aside class="sidebar" aria-label="Primary navigation">
+        <div class="sidebar-label">WORKSPACE</div>
+        <nav class="nav-list">
+          <a class="nav-item active" href="#workspace" data-section="workspace"><span class="nav-icon">⌘</span><span>Workspace</span></a>
+          <a class="nav-item" href="#findings" data-section="findings"><span class="nav-icon">◈</span><span>Findings</span><span class="nav-count" id="nav-findings-count">—</span></a>
+          <a class="nav-item" href="#repairs" data-section="repairs"><span class="nav-icon">↗</span><span>Repairs</span></a>
+        </nav>
+        <div class="sidebar-label secondary">REFERENCE</div>
+        <nav class="nav-list">
+          <a class="nav-item muted" href="#patterns" aria-disabled="true"><span class="nav-icon">▦</span><span>Pattern library</span><span class="nav-lock">SOON</span></a>
+          <a class="nav-item muted" href="#activity" aria-disabled="true"><span class="nav-icon">◷</span><span>Activity</span><span class="nav-lock">SOON</span></a>
+        </nav>
+        <div class="sidebar-footer"><div class="engine-chip"><span class="engine-pulse"></span><div><strong>LOCAL ENGINE</strong><small>NO NETWORK REQUIRED</small></div></div><div class="version">UI CONTRACT <b>v1</b></div></div>
+      </aside>
+      <main class="main-content" id="workspace">
+        <section class="page-heading"><div><p class="eyebrow">PROJECT WORKSPACE <span class="slash">/</span> <span id="heading-status">IDLE</span></p><h1>Repository intelligence</h1><p class="lede">Inspect patterns, understand findings, and apply verified repairs without leaving your local workspace.</p></div><button class="button button-outline" id="add-more-button" type="button" disabled><span>+</span> Add more</button></section>
+        <section class="intake-panel" id="intake-panel" aria-labelledby="intake-title">
+          <div class="intake-content"><div class="orbital-mark"><img src="assets/img/orion-icon.webp" alt="" /></div><div><p class="eyebrow">NEW ANALYSIS</p><h2 id="intake-title">Bring a repository into focus.</h2><p class="muted-copy">Start with local files or a project archive. Your source stays in this browser and is passed directly to the analysis engine.</p></div></div>
+          <div class="import-actions"><button class="import-card" type="button" data-input="project-input-files"><span class="import-glyph">↥</span><span><strong>Choose files</strong><small>Individual source files</small></span><span class="chevron">→</span></button><button class="import-card" type="button" data-input="project-input-folder"><span class="import-glyph">⌁</span><span><strong>Choose folder</strong><small>Preserve folder structure</small></span><span class="chevron">→</span></button><button class="import-card" type="button" data-input="project-input-zip"><span class="import-glyph">▧</span><span><strong>Import ZIP</strong><small>Pass archive to engine</small></span><span class="chevron">→</span></button></div>
+          <div class="drop-zone" id="drop-zone" tabindex="0"><span class="drop-icon">⇧</span><span><strong>Drop a project here</strong><small>Files and folders are accepted</small></span></div>
+          <p class="engine-note"><span class="warning-mark">!</span> Waiting for the deterministic engine to connect. The interface is ready for an <code>orf:state</code> snapshot.</p>
+          <input id="project-input-files" type="file" multiple hidden><input id="project-input-folder" type="file" webkitdirectory directory multiple hidden><input id="project-input-zip" type="file" accept=".zip,application/zip" hidden>
+        </section>
+        <section class="project-workspace hidden" id="project-workspace" aria-live="polite">
+          <div class="project-summary"><div><p class="eyebrow">LOADED PROJECT</p><h2 id="loaded-project-name">—</h2><p class="project-meta"><span id="loaded-file-count">0 files</span><span>·</span><span id="loaded-project-size">0 B</span></p></div><div class="project-summary-actions"><button class="button button-ghost" id="scan-button" type="button" disabled>Scan project <span>↗</span></button><button class="button button-ghost" id="cancel-scan-button" type="button" disabled>Cancel</button></div></div>
+          <div class="metric-grid"><div class="metric"><span>FILES SCANNED</span><strong id="metric-files">—</strong></div><div class="metric"><span>FINDINGS</span><strong id="metric-findings">—</strong></div><div class="metric"><span>CRITICAL / HIGH</span><strong id="metric-critical">—</strong></div><div class="metric"><span>REPAIRS VERIFIED</span><strong id="metric-verified">—</strong></div></div>
+          <div class="progress-strip" id="scan-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="progress-label">SCAN PROGRESS</span><span id="progress-message">Awaiting scan</span><span class="progress-value" id="progress-value">0%</span><div class="progress-track"><i id="progress-bar"></i></div></div>
+          <div class="workspace-grid"><section class="findings-panel" id="findings" aria-labelledby="findings-title"><div class="panel-header"><div><p class="eyebrow">ANALYSIS OUTPUT</p><h2 id="findings-title">Findings <span class="title-count" id="findings-total">—</span></h2></div><div class="filter-row"><label class="search-field"><span aria-hidden="true">⌕</span><input id="finding-search" type="search" placeholder="Search findings" autocomplete="off"></label><select id="severity-filter" aria-label="Filter by severity"><option value="all">All severity</option><option value="critical">Critical</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select><select id="category-filter" aria-label="Filter by category"><option value="all">All categories</option></select><select id="language-filter" aria-label="Filter by language"><option value="all">All languages</option></select></div></div><div class="findings-list" id="findings-list"><div class="empty-list"><span class="empty-glyph">◈</span><strong>No findings yet</strong><span>Import a project and run a scan to populate this view.</span></div></div></section><aside class="inspector-panel" id="finding-detail" aria-labelledby="detail-title"><div class="panel-header compact"><div><p class="eyebrow">INSPECTOR</p><h2 id="detail-title">Select a finding</h2></div></div><div class="inspector-empty"><span class="crosshair">＋</span><p>Choose a finding to inspect its context, rule metadata, and available repair.</p></div></aside></div>
+          <section class="repair-panel" id="repair-preview" aria-labelledby="repair-title"><div class="panel-header"><div><p class="eyebrow">REPAIR WORKSPACE</p><h2 id="repair-title">Repair preview <span class="title-count" id="repair-status">UNSELECTED</span></h2></div><div class="repair-actions"><button class="button button-ghost" id="fix-safe-button" type="button" disabled>Apply safe repairs</button><button class="button button-ghost" id="undo-button" type="button" disabled>Undo last change</button></div></div><div class="repair-empty"><span class="repair-code-mark">{ }</span><div><strong>No repair in preview</strong><p>Select a finding with an available repair to compare source and proposed changes.</p></div></div><div class="repair-comparison hidden"><div class="code-column"><div class="code-label">ORIGINAL</div><pre id="repair-before"></pre></div><div class="code-column proposed"><div class="code-label">PROPOSED REPLACEMENT</div><pre id="repair-after"></pre></div></div></section>
+          <footer class="workspace-footer"><span>ORION REPO FIXER <b>·</b> LOCAL-FIRST ANALYSIS</span><div><button class="text-button" id="export-zip-button" type="button" disabled>Download ZIP</button><button class="text-button" id="export-report-button" type="button" disabled>Export report</button></div></footer>
+        </section>
+      </main>
+    </div>
+  </div>
+  <div id="toast-region" class="toast-region" role="status" aria-live="polite" aria-atomic="true"></div>
+</body>
+</html>
